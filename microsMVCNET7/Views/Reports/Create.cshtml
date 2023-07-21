@@ -1,0 +1,94 @@
+﻿@model microsMVCNET7.Models.Report
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Report</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedDate" class="control-label"></label>
+                <input asp-for="CreatedDate" class="form-control" />
+                <span asp-validation-for="CreatedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div >
+                    <label asp-for="Category">Select Category:</label>
+                    <select asp-for ="Category" id="Category" class="form-select">
+                        <option value="">-- Select --</option>
+                        @foreach (var item in ViewBag.Categories)
+                        {
+                            <option value=@item.Id>@item.Name</option>
+                        }
+                    </select>
+                </div>
+                <div >
+                    <label  asp-for="CategoryValue">Select Subcategory:</label>
+                    <select asp-for="CategoryValue" id="Subcategory" class="form-select">
+                        <option value="">-- Select a category first --</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    var array = JSON.parse('@Html.Raw(Json.Serialize(((IEnumerable<CategoryValue>)ViewBag.CategoryValues)))')
+    const categorySelect = document.getElementById('Category');
+    const subcategorySelect = document.getElementById('Subcategory');
+    console.log(array)
+    // Listen for changes in the category select
+    categorySelect.addEventListener('change', function () {
+        const selectedValue = categorySelect.value;
+
+        // Clear the subcategory select
+        subcategorySelect.innerHTML = '';
+
+        // Check the selected value and populate the subcategory select accordingly
+       populateSubcategories(array.filter(i=> i.category.id===parseInt(selectedValue)))
+    });
+
+    // Function to populate the subcategory select with options
+    function populateSubcategories(subcategories) {
+      
+        const defaultOpt = document.createElement('option')
+        defaultOpt.value = '';
+        defaultOpt.textContent = "--Now Can Select--";
+        subcategorySelect.appendChild(defaultOpt)
+        subcategories.forEach(function (subcategory) {
+            const option = document.createElement('option');
+            option.value = subcategory.id;
+            option.textContent = subcategory.value;
+            subcategorySelect.appendChild(option);
+        });
+    }
+
+
+</script>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
