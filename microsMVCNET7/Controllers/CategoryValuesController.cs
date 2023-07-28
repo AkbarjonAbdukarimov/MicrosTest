@@ -63,14 +63,14 @@ namespace microsMVCNET7.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Value")] CategoryValue categoryValue,IFormCollection form)
         {
-            string cat = form["Category"][0];
-            if (cat!="Select")
+            string cat = form["Category.Name"][0];
+            if (cat != "Select")
             {
 
-                Category category =  _context.Categories.Find(int.Parse(cat));
+                Category category = _context.Categories.Find(int.Parse(cat));
                 categoryValue.Category = category;
             }
-            
+
             if (ModelState.IsValid)
             { 
                

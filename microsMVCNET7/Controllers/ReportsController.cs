@@ -5,6 +5,8 @@ using microsMVCNET7.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace microsMVCNET7.Controllers
 {
@@ -19,10 +21,25 @@ namespace microsMVCNET7.Controllers
 
         // GET: Reports
         [Authorize]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(IFormCollection form)
         {
-          
-            var data = await _context.Reports.Where(r=>r.Author.Id== User.Identity.GetUserId()).Include(i => i.CategoryValue).Include(i=>i.CategoryValue.Category).ToListAsync();
+            List<Report> data;
+             Console.WriteLine(User);
+            if (!form.IsNullOrEmpty())
+            {
+                string date = form["date"][0];
+                if (!date.IsNullOrEmpty())
+                {
+                    DateTime d = DateTime.Parse(date);
+                    data = await _context.Reports.
+                        Where(r => r.Author.Id == User.Identity.GetUserId() && (r.CreatedDate.Month == d.Month && r.CreatedDate.Year == d.Year))
+                        .Include(i => i.CategoryValue)
+                        .Include(i => i.CategoryValue.Category).ToListAsync();
+                    return View(data);
+                }
+                    
+            }
+            data = await _context.Reports.Where(r=>r.Author.Id== User.Identity.GetUserId()).Include(i => i.CategoryValue).Include(i=>i.CategoryValue.Category).ToListAsync();
             return View(data);
         }
         public JsonResult GetCats()

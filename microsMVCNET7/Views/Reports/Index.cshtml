@@ -9,6 +9,21 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<div class="row container">
+    <div class="col-3">
+        <form asp-action="Index">
+            <div class="input-group mb-3">
+
+                <input name="date" type="date" class="form-control" placeholder="Please select Period to Filter" aria-label="date" aria-describedby="basic-addon1">
+            </div>
+            <div class="input-group mb-3">
+
+                <button type="submit" class=" btn btn-primary">Filter</button>
+            </div>
+        </form>
+       
+    </div>
+</div>
 <table class="table">
     <thead>
         <tr>

@@ -1,1 +1,0 @@
-admin account full can create categories and values admin@mail.com pass:Admin_1234
